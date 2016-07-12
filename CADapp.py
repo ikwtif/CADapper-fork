@@ -92,22 +92,22 @@ FIELDS = [
     "ingenieur"]
 
 CAPS_TEMPLATE = """\
-%(bouwheer)s
-%(werfadres)s
+{0[bouwheer]}
+{0[werfadres]}
 
-%(werfgemeente)s
-%(woning straat)s
-%(woning gemeente)s
+{0[werfgemeente]}
+{0[woning straat]}
+{0[woning gemeente]}
 
-%(architect)s
-%(architect straat)s
-%(architect gemeente)s
-%(aannemer)s
+{0[architect]}
+{0[architect straat]}
+{0[architect gemeente]}
+{0[aannemer]}
 
-%(aannemer straat)s
-%(aannemer gemeente)s
+{0[aannemer straat]}
+{0[aannemer gemeente]}
 
-%(ingenieur)s"""
+{0[ingenieur]}"""
 
 class StartPage(tk.Frame):
 
@@ -162,7 +162,7 @@ class StartPage(tk.Frame):
         self.caps.configure(state="normal")
         self.caps.delete(1.0, tk.END)
         data = {k:v.get().upper() for k,v in self.values.items()}
-        self.caps.insert(tk.INSERT, CAPS_TEMPLATE%data)
+        self.caps.insert(tk.INSERT, CAPS_TEMPLATE.format(data))
         self.caps.configure(state="disabled")
 
     #update entry boxes

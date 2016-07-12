@@ -5,7 +5,7 @@ from tkinter.filedialog import askopenfilename, askdirectory
 import json
 
 from excel_reader import read_excel
-from save_a_pdf import get_save
+from save_a_pdf import GetSave
 
 """
 main menu file with class structure
@@ -56,7 +56,6 @@ class CADapp(tk.Frame):
 
 	def selecting(self, dossier=None):
 		#gets data from *.xls
-
 		the_dict = read_excel(dossier) #imported method from excel_reader.py, returns the_dictionary
 		page = self.frames[StartPage]
 		page.renew_entry_data(the_dict)
@@ -138,7 +137,7 @@ class StartPage(tk.Frame):
 	def save_pdf(self):
 		#create new dict
 		new_dict = {k:v.get() for k,v in self.values.items()}
-		get_save(new_dict)    #imported method from save_a_pdf.py
+		GetSave(new_dict)    #imported method from save_a_pdf.py
 
 	#convert data to CAPS data
 	def get_caps(self):
@@ -238,8 +237,8 @@ class Dialog(tk.Toplevel):
 		print(self.main_dir)
 		settings['directory'] = self.main_dir
 
-		#~ with open("c://data//settings.txt","w") as f:
-			#~ json.dump(f, settings, indent = 4)
+		with open("settings.txt","w") as f:
+			json.dump(f, settings, indent = 4)
 
 		print(self.main_dir)
 
@@ -251,12 +250,8 @@ class Dialog(tk.Toplevel):
 	def cancel(self, event=None):
 		self.destroy()
 
-
 if __name__ == "__main__":
 	app = tk.Tk() #we create the root window here to give us flexibility
 	window = CADapp(app)
 	window.pack()
-	#~ StartPage(app).pack()
 	app.mainloop()
-
-

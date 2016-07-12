@@ -91,6 +91,24 @@ FIELDS = [
     "aannemer gemeente",
     "ingenieur"]
 
+CAPS_TEMPLATE = """\
+%(bouwheer)s
+%(werfadres)s
+
+%(werfgemeente)s
+%(woning straat)s
+%(woning gemeente)s
+
+%(architect)s
+%(architect straat)s
+%(architect gemeente)s
+%(aannemer)s
+
+%(aannemer straat)s
+%(aannemer gemeente)s
+
+%(ingenieur)s"""
+
 class StartPage(tk.Frame):
 
     def __init__(self, parent):
@@ -143,9 +161,8 @@ class StartPage(tk.Frame):
     def get_caps(self):
         self.caps.configure(state="normal")
         self.caps.delete(1.0, tk.END)
-        data = [self.values[field].get().upper() for field in FIELDS]
-        template = "{} \n{} \n\n{} \n{} \n{} \n\n{} \n{} \n{} \n{} \n\n{} \n{} \n\n{} \n"
-        self.caps.insert(tk.INSERT, template.format(*data))
+        data = {k:v.get().upper() for k,v in self.values.items()}
+        self.caps.insert(tk.INSERT, CAPS_TEMPLATE%data)
         self.caps.configure(state="disabled")
 
     #update entry boxes

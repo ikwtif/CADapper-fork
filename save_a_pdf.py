@@ -78,12 +78,12 @@ class FooterCanvas(canvas.Canvas):
     def voorblad(self, Story, styles):
         #dossiernummer
         self.ptext = '<font size=10><u>Ref.: {}</u></font>'.format(self.dossier_nummer)
-        Story.append(Paragraph(self.ptext, styles["Text"]))       
+        Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 20))
 
         #betreft stabiliteitsstudie
         self.ptext = '<para align=Center><font size=14><strong>Betreft: stabiliteitsstudie</strong></font></para>'
-        Story.append(Paragraph(self.ptext, styles["Textborder"]))       
+        Story.append(Paragraph(self.ptext, styles["Textborder"]))
         Story.append(Spacer(1, 40))
 
         #werfadres
@@ -99,7 +99,7 @@ class FooterCanvas(canvas.Canvas):
         {} <br/> \
         {}'.format(self.architect_naam, self.architect_straat, self.architect_gemeente)
         Story.append(Paragraph(self.ptext, styles["Textcenter"]))
-        Story.append(Spacer(1, 40))    
+        Story.append(Spacer(1, 40))
 
         #aannemer
         self.ptext = 'Aannemer: <br/> \
@@ -107,26 +107,26 @@ class FooterCanvas(canvas.Canvas):
         {} <br/> \
         {}'.format(self.aannemer_naam, self.aannemer_straat, self.aannemer_gemeente)
         Story.append(Paragraph(self.ptext, styles["Textcenter"]))
-        Story.append(Spacer(1, 40)) 
-        
+        Story.append(Spacer(1, 40))
+
         #ingenieur
         self.ptext = 'Ingenieur: <br/> \
         {}'.format(self.ingenieur_naam)
         Story.append(Paragraph(self.ptext, styles["Textcenter"]))
-        Story.append(Spacer(1, 40)) 
-        
+        Story.append(Spacer(1, 40))
+
         #datum
         self.ptext = '{}'.format(self.datum)
         Story.append(Paragraph(self.ptext, styles["Textcenter"]))
-        Story.append(Spacer(1, 40)) 
+        Story.append(Spacer(1, 40))
 
     def inhouds_tafel(self, Story, styles):
-        
+
         Story.append(Spacer(1, 20))
-        
+
         #betreft stabiliteitsstudie
         self.ptext = '<para align=Center><font size=14><strong>Overzicht inhoud bundel</strong></font></para>'
-        Story.append(Paragraph(self.ptext, styles["Textborder"]))       
+        Story.append(Paragraph(self.ptext, styles["Textborder"]))
         Story.append(Spacer(1, 80))
 
 
@@ -134,11 +134,11 @@ class FooterCanvas(canvas.Canvas):
         self.ptext = '<font size=14>1. Algemene beschrijving beton, staal en \
         uitvoeringstechnieken voor stabiliteit</font>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
-        Story.append(Spacer(1, 40)) 
+        Story.append(Spacer(1, 40))
 
         self.ptext = '<font size=14>2. Meetstaat stabiliteit</font>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
-        Story.append(Spacer(1, 40)) 
+        Story.append(Spacer(1, 40))
 
 
         self.ptext = '<font size=14>3. Staalborderel</font>'
@@ -148,25 +148,25 @@ class FooterCanvas(canvas.Canvas):
 
         self.ptext = '<font size=14>Plannen en uitvoeringsdetails in bijlage</font>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
-        Story.append(Spacer(1, 40))   
+        Story.append(Spacer(1, 40))
 
     def beschrijving(self, Story, styles):
 
         #dossiernummer
         self.ptext = '<font size=10><u>Dossiernr.: {}</u></font>'.format(self.dossier_nummer)
-        Story.append(Paragraph(self.ptext, styles["Text"]))       
+        Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
         #beton
         """beschrijving beton"""
 
         self.ptext = '<font size=12><strong>Betreft: Beschrijving Beton voor stabiliteit</strong></font>'
-        Story.append(Paragraph(self.ptext, styles["Border"]))       
+        Story.append(Paragraph(self.ptext, styles["Border"]))
         Story.append(Spacer(1, 12))
         #1
         self.ptext = '<u>1. Algemene specificaties en eisen</u>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
-         
+
         ptext = 'De vervaardiging, specificatie en eigenschappen van het beton en \
         de productiecontrole moeten voldoen aan de eisen en de richtlijnen van de normen \
         NBN EN206-1:2001 en NBN B 15001:2004 «Beton – Eisen, gedraging, vervaardiging en \
@@ -179,12 +179,12 @@ class FooterCanvas(canvas.Canvas):
 
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
-         
-        #2 
+
+        #2
         self.ptext = '<u>2. Bijzondere specificaties</u>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
-         
+
         self.ptext = 'De gebruikte terminologie is die van de normen \
         <b>NBN EN 206-1:2001 en NBN B 15 001:2004</b>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
@@ -194,7 +194,7 @@ class FooterCanvas(canvas.Canvas):
         self.ptext = '<u>2.1 Eisen</u>'
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
-         
+
         self.ptext = '<u>Sterkteklasse:</u> C 25/30 (funderingen) C30/37 (balken & kolommen) <br/> \
         <u>Duurzaamheidseisen met B1 (gebruiksdomein) en B2 (omgevingsklasse): </u><br/> \
         Gewapend beton (GB) en EE1 (geen vorst en fundering onder vorstgrens,...) \
@@ -219,7 +219,7 @@ class FooterCanvas(canvas.Canvas):
         bewaard op de bouwplaats en blijven ter beschikking van de bouwheer.'
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
-         
+
         #2.2.3
         self.ptext = '2.2.3 Beton dat niet geleverd of gefabriceerd wordt onder het BENOR-merk valt volledig \
         onder de verantwoordelijkheid van de aannemer zelfs als hij de fabricage ervan toevertrouwt \
@@ -313,7 +313,7 @@ class FooterCanvas(canvas.Canvas):
         """beschrijving staal"""
 
         self.ptext = '<font size=12><strong>Betreft: Beschrijving Staal voor stabiliteit</strong></font>'
-        Story.append(Paragraph(self.ptext, styles["Border"]))       
+        Story.append(Paragraph(self.ptext, styles["Border"]))
         Story.append(Spacer(1, 12))
 
         self.ptext = '<u>Staalsoort:</u> BE500 <br/> \
@@ -326,7 +326,7 @@ class FooterCanvas(canvas.Canvas):
         """ opmerkingen aannemer"""
 
         self.ptext = '<font size=12><strong>Betreft: Algemene opmerkingen (voor aannemer)</strong></font>'
-        Story.append(Paragraph(self.ptext, styles["Border"]))       
+        Story.append(Paragraph(self.ptext, styles["Border"]))
         Story.append(Spacer(1, 12))
 
         self.ptext = '<u>Dekking:</u> \
@@ -474,8 +474,8 @@ class FooterCanvas(canvas.Canvas):
 #-----------------------------------------------------------------------------
 
 
-
-class get_save(FooterCanvas):
+#class names are always CamelCase
+class GetSave(FooterCanvas):
     """
     woning_naam = "naam"
     woning_straat = "woning_straat"
@@ -496,7 +496,7 @@ class get_save(FooterCanvas):
                 fontName= 'Helvetica',
                 fontSize= 20,
                 borderpadding = 20,
-                ))    
+                ))
             #border
         self.Border = styles.add(ParagraphStyle(name='Border', alignment=TA_JUSTIFY,
                 fontName= 'Times-Bold',
@@ -519,7 +519,7 @@ class get_save(FooterCanvas):
                 fontName= 'Helvetica',
                 fontSize= 14,
                 leading = 18
-                ))    
+                ))
             #textborder
         self.Text_border = styles.add(ParagraphStyle(name='Textborder', alignment=TA_JUSTIFY,
                 fontName= 'Helvetica',
@@ -545,39 +545,38 @@ class get_save(FooterCanvas):
 
 
     def __init__(self, newer_dict, **kwargs):
-        
-        self.woning_naam = newer_dict['woning_naam']
-        self.werf_straat = newer_dict['werf_straat']
-        self.werf_gemeente = newer_dict['werf_gemeente']
-        self.woning_straat = newer_dict['woning_straat']
-        self.woning_gemeente = newer_dict['woning_gemeente']
-        self.architect_naam = newer_dict['architect_naam']
-        self.architect_straat = newer_dict['architect_straat']
-        self.architect_gemeente = newer_dict['architect_gemeente']
-        self.aannemer_naam = newer_dict['aannemer_naam']
-        self.aannemer_straat= newer_dict['aannemer_straat']
-        self.aannemer_gemeente = newer_dict['aannemer_gemeente']
-        self.ingenieur_naam = newer_dict['ingenieur_naam']
+        self.woning_naam = newer_dict['bouwheer']
+        self.werf_straat = newer_dict['werfadres']
+        self.werf_gemeente = newer_dict['werfgemeente']
+        self.woning_straat = newer_dict['woning straat']
+        self.woning_gemeente = newer_dict['woning gemeente']
+        self.architect_naam = newer_dict['architect']
+        self.architect_straat = newer_dict['architect straat']
+        self.architect_gemeente = newer_dict['architect gemeente']
+        self.aannemer_naam = newer_dict['aannemer']
+        self.aannemer_straat= newer_dict['aannemer straat']
+        self.aannemer_gemeente = newer_dict['aannemer gemeente']
+        self.ingenieur_naam = newer_dict['ingenieur']
         self.datum = time.strftime("%d/%m/%Y")
         self.dossier_nummer = newer_dict['dossier_nummer']
-        
+
         #adding styles
         styles=getSampleStyleSheet()
         self.add_styles(styles)
 
         # Content
         Story = []
-        
+
             # voorblad
         self.add_header(Story, styles)
         self.voorblad(Story, styles)
         '''Story.append(PageBreak())'''
-        
+
             #inhoudstafel
         self.add_header(Story, styles)
         self.inhouds_tafel(Story, styles)
         Story.append(PageBreak())
-        
+
             #bundel
         self.add_header(Story, styles)
         self.beschrijving(Story, styles)

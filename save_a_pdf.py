@@ -13,6 +13,22 @@ from reportlab.lib.colors import (
     yellow
 )
 
+"""
+issue emtpy page after 'voorblad'
+comment Story.append(PageBreak()) --- possible fix?
+
+added to \lib\site-packages\reportlab\platypus\doctemplate.py
+
+class BaseDocTemplate
+    def handle_pageBreak()
+            '''ignore page break on empty page'''
+            if self._curPageFlowableCount == 1:
+                return
+
+set to '==1' instead of '==0' because footer/header????
+"""
+
+
 
 
 
@@ -87,7 +103,8 @@ class FooterCanvas(canvas.Canvas):
         Story.append(Spacer(1, 40))
 
         #werfadres
-        self.ptext = 'Bouwheer: {} <br/> \
+        self.ptext = 'Bouwheer: <br/> \
+        {} <br/> \
         {} <br/> \
         {}'.format(self.woning_naam, self.werf_straat, self.werf_gemeente)
         Story.append(Paragraph(self.ptext, styles["Textcenter"]))
@@ -570,7 +587,7 @@ class GetSave(FooterCanvas):
             # voorblad
         self.add_header(Story, styles)
         self.voorblad(Story, styles)
-        '''Story.append(PageBreak())'''
+        Story.append(PageBreak()) #comment out for empty page bug??
 
             #inhoudstafel
         self.add_header(Story, styles)

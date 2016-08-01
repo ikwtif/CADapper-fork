@@ -12,7 +12,8 @@ from save_a_pdf import GetSave
 empty page fix implemented, check if it works ---- check file for info
 """
 from settings import Settings
-
+from functions import Functions
+import functions
 
 
 
@@ -67,8 +68,9 @@ folder_scan = {
 
 
 
-class CADapp(tk.Frame, Settings):
+class CADapp(tk.Frame, Functions):
     def __init__(self, master): # only runs one time at startup
+        global main_settings, folder_scan
         tk.Frame.__init__(self, master)
         self.master = master
         #----------------
@@ -84,8 +86,8 @@ class CADapp(tk.Frame, Settings):
             frame.grid(row= 0, column= 0, sticky="nsew", padx=5,pady=5)
         self.show_frame(StartPage)                  # show starting frame
 
-        self.loading()
-
+        main_settings, folder_scan = self.loading()
+    """
     def loading(self):
         print("loading settings/folders *.txt")
         mains, folder_s = self.loader()             # returns a tuple, from settings.py
@@ -94,23 +96,14 @@ class CADapp(tk.Frame, Settings):
             main_settings[item] = mains[item]
         for item in folder_s:
             folder_scan[item] = folder_s[item]
-
+    """
 
     def show_frame(self, cont):
         print("initialising page(frame)")
         frame = self.frames[cont]
         frame.tkraise()
 
-    def selecting(self, dossier=None):
-        print("get data from *.xls")
-        #gets data from *.xls
-        the_dict = read_excel(dossier)              #imported method from excel_reader.py, returns the_dictionary
-        """?    """
-        #adds dossier number from entry
-        the_dict['dossier_nummer'] = self.dossier.get()
-        page = self.master.frames[StartPage]        #!!!!!!!!!!!!!!!!!!!!!!
-        page.renew_entry_data(the_dict)
-        print(the_dict)
+
 
 """--------------------menu--------------------"""
 
@@ -149,27 +142,9 @@ FIELDS = [
     "aannemer gemeente",
     "ingenieur"]
 
-CAPS_TEMPLATE = """\
-{0[bouwheer]}
-{0[werfadres]}
-
-{0[werfgemeente]}
-{0[woning straat]}
-{0[woning gemeente]}
-
-{0[architect]}
-{0[architect straat]}
-{0[architect gemeente]}
-{0[aannemer]}
-
-{0[aannemer straat]}
-{0[aannemer gemeente]}
-
-{0[ingenieur]}"""
 
 
-
-class StartPage(CADapp, tk.Frame, Settings):
+class StartPage(CADapp, tk.Frame, Functions):
 
     def __init__(self, parent):
         print("initiate StartPage")
@@ -202,7 +177,7 @@ class StartPage(CADapp, tk.Frame, Settings):
         #create dossier reference entry
         self.dossier = tk.Entry(box_info, justify= 'center')
         self.dossier.grid(row=1,column=1, sticky=tk.W, padx=5,pady=5)
-        self.dossier.bind("<Return>", self.get_data)        #get data for dossier
+        self.dossier.bind("<Return>", self.searchdossier)        #get data for dossier
         self.dossier.focus_set()
         self.values["dossier_nummer"] = self.dossier
         namelabel = tk.Label(box_info, text = 'Naam:',justify= "center", font= LARGE_FONT, relief= "groove")
@@ -218,67 +193,22 @@ class StartPage(CADapp, tk.Frame, Settings):
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
 
-    def save_pdf(self):
-        print("create new dict, useless?")
-        """?    why create new dict?"""
-        new_dict = {k:v.get() for k,v in self.values.items()}   #self.values from def initialise
-        GetSave(new_dict)                                       #imported method from save_a_pdf.py
-
-    def get_caps(self):
-        print("convert to CAPS")
-        self.caps.configure(state="normal")
-        self.caps.delete(1.0, tk.END)
-        data = {k:v.get().upper() for k,v in self.values.items()}
-        self.caps.insert(tk.INSERT, CAPS_TEMPLATE.format(data))
-        self.caps.configure(state="disabled")
-
-    def renew_entry_data(self, the_dict):
-        print("updating entry boxes")
-        for key, value in the_dict.items():
-            if key in self.values:
-                self.values[key].delete(0, tk.END)
-                self.values[key].insert(0, value)
-
-    def get_data(self, event=None):
+    def searchdossier(self, event = None):
         print("searches datafile for dossier: *.xls")
-        dossier = self.dossier.get()                            #gets dossier from entry
-        while dossier.isdigit():                                #check for integer
-            doss = folder_scan[dossier]
-            bijlage = [f for f in os.listdir(doss['path']) if f.endswith('.xls')]
-            if len(bijlage) == 1:
-                x = doss["path"] + "//" + bijlage[0]
-                self.name['text'] = folder_scan[dossier]['name']# set label text to name
-                self.dossier_dir(folder_scan[dossier])          # check folders for dossier and creates missing folders
-                self.selecting(x)                               # gets data
-            else:
-                #add manual support to select proper *.xls file
-                #done in excelreader.py when no dossier(?)
-                result = tk.messagebox.askquestion('Error', 'Excel Data file not found \n Do you want to select it manually?')
-                if result == 'yes':
-                    print('manually selecting *.xls')
-                else:
-                    break
+        global folder_scan
+        print('folder scan searchdossier: \n',folder_scan)
+        dossier = self.dossier.get()                                    # gets dossier from entry
+        if dossier.isdigit():                                           # check for integer
+            xlspath = self.xlscheck(dossier)                            # creates path for xls, xlscheck from functions.py
+            if xlspath is not None:
+                self.name['text'] = folder_scan[dossier]['name']            # set label text to name
+                #self.dossier_dir(folder_scan[dossier])                     # check folders for dossier and creates missing folders, dossier_dir from settings.py
+                xlsdata = self.xlsgetdata(xlspath)                          # gets data
+                page = self.master.frames[StartPage]                        # !!!!!!!!!!!!!!!!!!!!!!
+                page.update_entry(xlsdata)
+                print("xlsdata\n {}".format(xlsdata))
         else:
             messagebox.showwarning("error", "not a number")
-
-    def move_backup(self):
-        print("moving backups")
-        struct = self.structure()
-        print(struct)
-        """ need to redo code, change creation of paths"""
-        path = os.path.dirname(os.path.realpath(sys.argv[0]))   # working directory path
-        staal_path = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Meetstaat & borderel//"
-        backup_path = path + "//Backups"
-        print("check if files already exist")
-        for filename in os.listdir(backup_path):
-            s_path = staal_path + "//" + filename
-            direct = backup_path + "//" + filename
-            if os.path.isfile(s_path) == False:
-                print(" copy", filename)
-                shutil.copy(direct, staal_path)
-            else:
-                print("passing")
-                continue
 
 
 
@@ -292,7 +222,7 @@ class StartPage(CADapp, tk.Frame, Settings):
 
 """ change focus when settings window goes up, focus still on input entry"""
 
-class Dialog(tk.Toplevel, Settings):
+class Dialog(tk.Toplevel, Functions):
     def __init__(self, parent, title = None):
         print("initiating settings")
         tk.Toplevel.__init__(self, parent)
@@ -318,9 +248,9 @@ class Dialog(tk.Toplevel, Settings):
 
     def buttonbox(self):
         box = tk.Frame(self, pady=40)
-        w = ttk.Button(box, text="update dossiers", command=lambda: self.scan_folder())
+        w = ttk.Button(box, text="update dossiers", command=lambda: self.scan_folder())                             #
         w.grid(column=3, row=1)
-        w = ttk.Button(box, text="select folder", width=10, command = self.select_folder)
+        w = ttk.Button(box, text="select folder", width=10, command = self.select_folder)                           #
         w.grid(column=2, row=1)
         w = ttk.Button(box, text="OK", width=10, command=self.ok, default=tk.ACTIVE)
         w.grid(column= 0, row = 1)
@@ -347,57 +277,6 @@ class Dialog(tk.Toplevel, Settings):
         also load settings from *.txt first
     """
 
-
-
-    def select_folder(self, event=None):
-        print("setting: manually select main folder")
-        self.main_dir = askdirectory()
-        if not self.main_dir:
-            print("nothing selected")   # add popup message
-            pass
-            #WATCH FOR
-            """
-            >>>bool("")
-            False
-            >>> bool("   ")
-            True
-            >>> bool("   ".strip())
-            False
-            """
-        else:
-            print("saving settings")
-            main_settings["directory"] = self.main_dir      #remove(?)
-            self.dir_label['text'] = self.main_dir          # update label
-        """?    change above settings save,
-        only save when pressing ok???"""
-
-    def scan_folder(self):
-        print("scanning folder, needs to check for removed folders")
-        s = self.read_folders(main_settings["directory"])   # from import Settings, main directory path
-        global folder_scan                                  # clear dict first to not keep removed folders
-        folder_scan = {}
-        for item in s:
-            folder_scan[item] = s[item]
-        print('folder_scan', folder_scan)
-
-
-    def ok(self, event=None):
-        print("saving settings")
-        """
-        DONE
-            load settings at init,
-            and keep variables as class variable
-            to send to save functions in settings.py
-        """
-        print("saving: \n", main_settings)
-        print("saving: \n", folder_scan)
-        global folder_scan
-        self.save_set(main_settings)
-        self.save_folder(folder_scan)
-        self.cancel()
-
-    def cancel(self, event=None):
-        self.destroy()
 
 if __name__ == "__main__":
     app = tk.Tk()                                           # create the root window here to give us flexibility

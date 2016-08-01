@@ -2,7 +2,7 @@ import xlrd
 import time
 from tkinter.filedialog import askopenfilename
 
-def open_file():    # useless(?)
+def open_file():                            # KEEP FOR TOPLEVEL SCRIPT
     file_name = askopenfilename()
     print(file_name)
     return file_name
@@ -15,14 +15,8 @@ def split_adress(adress):
 
 def read_excel(dossier=None):
     print("start reading excel \n dossier: \n {}".format(dossier))
-    if dossier is not None:
-        file_path = dossier
-    else:
-        file_path = open_file()
-
-    book = xlrd.open_workbook(file_path)
-    # get first worksheet
-    first_sheet = book.sheet_by_index(0)
+    book = xlrd.open_workbook(dossier)
+    first_sheet = book.sheet_by_index(0)                                # get first worksheet
     #create dict
     werf_adress = split_adress(first_sheet.cell(3,2).value)
     w_adress = split_adress(first_sheet.cell(13,2).value)
@@ -42,5 +36,5 @@ def read_excel(dossier=None):
         "aannemer gemeente": aa_adress[1],
         "ingenieur": "ingenieur"
         }
-    print(label_dict)
+    print("extracted data: \n {}".format(label_dict))
     return label_dict

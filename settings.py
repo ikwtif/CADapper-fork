@@ -89,29 +89,23 @@ class Settings():
     def read_folders(self, scanpath):
         #main directory path
         print("scanning folders --- change name(?)")
-        self.dir = scanpath
         self.dossier = {}
         #create dict (dossier:name)
         #get only folder names
-        dirs = [d for d in os.listdir(self.dir) if os.path.isdir(os.path.join(self.dir, d))]
-        x = 0
+        dirs = [d for d in os.listdir(scanpath) if os.path.isdir(os.path.join(scanpath, d))]
         for folder in dirs:
-            a = folder[:4]
-            b = folder[7:]
-            self.dossier[a] = {}
-            self.dossier[a]["name"] = b
-            #get full path
-            z = [d for d in (os.path.join(self.dir, d1) for d1 in os.listdir(self.dir)) if os.path.isdir(d)]
-            self.dossier[a]["path"] = z[x]
-            x += 1
+            path = os.pah.join(scanpath, folder)
+            print(folder)
+            prefix, suffix = folder.split(' - ', 1)
+            self.dossier[a] = {"name": prefix, "path": path}
         print(self.dossier)
         return self.dossier
 
 
-
         """
-        ?       one of the other       ?
+        ?       one of the other = other       ?
         """
+    """
     #check if dirs exist for ALL SAVED dossiers
     def check_folders(self, folder_scan):
         """
@@ -137,7 +131,7 @@ class Settings():
                         scanpath = folder_scan[key]['path'] + "//" + maps + "//" + item
                         print(scanpath)
                         self.create_dirs(scanpath)
-
+    """
     #check if dirs exist for SPECIFIC dossiers
     def dossier_dir(self, folder_scan):
         path = folder_scan['path']

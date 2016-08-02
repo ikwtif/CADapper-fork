@@ -33,7 +33,7 @@ class Functions(Settings):
 
     """
     #####################################################################
-                            startpage functions
+                            CORE functions
     #####################################################################
     """
 
@@ -76,13 +76,16 @@ class Functions(Settings):
     """
 
     def save_pdf(self):
-        print("create new dict, useless?")
-        """?    why create new dict?"""
-        new_dict = {k:v.get() for k,v in self.values.items()}   #self.values from def initialise
-        GetSave(new_dict)                                       #imported method from save_a_pdf.py
+        """
+        create dict with data from entry boxes and send to save function
+        """
+        new_dict = {k:v.get() for k,v in self.values.items()}       #self.values from def initialise
+        GetSave(new_dict)                                           #imported method from save_a_pdf.py
 
     def get_caps(self):
-        print("convert to CAPS")
+        """
+        Capitalise data in entry boxes and update textbox
+        """
         self.caps.configure(state="normal")
         self.caps.delete(1.0, tk.END)
         data = {k:v.get().upper() for k,v in self.values.items()}
@@ -90,7 +93,9 @@ class Functions(Settings):
         self.caps.configure(state="disabled")
 
     def update_entry(self, the_dict):
-        print("updating entry boxes")
+        """
+        update entry boxes
+        """
         for key, value in the_dict.items():
             if key in self.values:
                 self.values[key].delete(0, tk.END)
@@ -175,16 +180,12 @@ class Functions(Settings):
 
 
     def ok(self, event=None):
-        print("saving settings")
         """
-        DONE
-            load settings at init,
-            and keep variables as class variable
-            to send to save functions in settings.py
+        Saves settings
         """
+        global folder_scan
         print("saving: \n", main_settings)
         print("saving: \n", folder_scan)
-        global folder_scan
         self.save_set(main_settings)
         self.save_folder(folder_scan)
         self.cancel()

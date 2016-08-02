@@ -84,21 +84,22 @@ class Settings():
             print(self.loading[dossier])
             return self.loading[dossier]
 
-    #read dossiers folders from path
-        """?    simpler solution"""
+
     def read_folders(self, scanpath):
-        #main directory path
-        print("scanning folders --- change name(?)")
+        """
+        returns dictionary with name,path for each folder(/dossier)
+        from foldernames structure 'dossier - name'
+        """
+        print("reading folders: dossier/name/path")
         self.dossier = {}
-        #create dict (dossier:name)
-        #get only folder names
-        dirs = [d for d in os.listdir(scanpath) if os.path.isdir(os.path.join(scanpath, d))]
+        dirs = os.listdir(scanpath)
         for folder in dirs:
-            path = os.pah.join(scanpath, folder)
-            print(folder)
-            prefix, suffix = folder.split(' - ', 1)
-            self.dossier[a] = {"name": prefix, "path": path}
-        print(self.dossier)
+            path = os.path.join(scanpath, folder)
+            if ' - ' in folder and os.path.isdir(path):
+                print('processing\n', folder)
+                prefix, suffix = folder.split(' - ', 1)
+                self.dossier[prefix] = {"name": suffix, "path": path}
+        print("returning\n", self.dossier)
         return self.dossier
 
 
@@ -109,7 +110,7 @@ class Settings():
     #check if dirs exist for ALL SAVED dossiers
     def check_folders(self, folder_scan):
         """
-        ONLY DO THIS FOR INPUT DOSSIER? ? ? ?
+        #ONLY DO THIS FOR INPUT DOSSIER? ? ? ?
         """
         for key in folder_scan:
             print(key)
@@ -134,15 +135,18 @@ class Settings():
     """
     #check if dirs exist for SPECIFIC dossiers
     def dossier_dir(self, folder_scan):
-        path = folder_scan['path']
-        for maps in folder_structure:
-            if folder_structure[maps] == None:
-                    scanpath = folder_scan['path'] + "//" + maps
-                    self.create_dirs(scanpath)
+        """
+        create dictionary structure for specific dossier folder
+        so we can check against existing structure
+        """
+        global folder_structure
+        for folder, subfolder in folder_structure.items():
+            if subfolder == None:
+                scanpath = folder_scan['path'] + "//" + maps
             else:
-                for item in folder_structure[maps]:
+                for subfolder in folder_structure[folder]:
                     scanpath = folder_scan['path'] + "//" + maps + "//" + item
-                    self.create_dirs(scanpath)
+            self.create_dirs(scanpath)
 
 
 

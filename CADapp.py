@@ -199,7 +199,7 @@ class StartPage(CADapp, tk.Frame, Functions):
         print('folder scan searchdossier: \n',folder_scan)
         dossier = self.dossier.get()                                    # gets dossier from entry
         if dossier.isdigit():                                           # check for integer
-            xlspath = self.xlscheck(dossier)                            # creates path for xls, xlscheck from functions.py
+            xlspath = self.xlscheck(dossier, folder_scan)                            # creates path for xls, xlscheck from functions.py
             if xlspath is not None:
                 self.name['text'] = folder_scan[dossier]['name']            # set label text to name
                 #self.dossier_dir(folder_scan[dossier])                     # check folders for dossier and creates missing folders, dossier_dir from settings.py
@@ -222,7 +222,7 @@ class StartPage(CADapp, tk.Frame, Functions):
 
 """ change focus when settings window goes up, focus still on input entry"""
 
-class Dialog(tk.Toplevel, Functions):
+class Dialog(CADapp, tk.Toplevel, Functions):
     def __init__(self, parent, title = None):
         print("initiating settings")
         tk.Toplevel.__init__(self, parent)
@@ -248,21 +248,28 @@ class Dialog(tk.Toplevel, Functions):
 
     def buttonbox(self):
         box = tk.Frame(self, pady=40)
-        w = ttk.Button(box, text="update dossiers", command=lambda: self.scan_folder())                             #
+        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder())                             #
         w.grid(column=3, row=1)
-        w = ttk.Button(box, text="select folder", width=10, command = self.select_folder)                           #
+        w = ttk.Button(box, text="Select folder", width=10, command = self.select_folder)                           #
         w.grid(column=2, row=1)
-        w = ttk.Button(box, text="OK", width=10, command=self.ok, default=tk.ACTIVE)
+        w = ttk.Button(box, text="Save", width=10, command=self.savesetting, default=tk.ACTIVE)
         w.grid(column= 0, row = 1)
         w = ttk.Button(box, text="Cancel", width=10, command=self.cancel)
         w.grid(column= 1, row = 1)
-        w = ttk.Button(box, text="check dirs", width=10, command=lambda: self.check_folders(folder_scan))
+        w = ttk.Button(box, text="Scan dirs", width=10, command=lambda: self.check_folders(folder_scan))
         w.grid(column = 4, row = 1)
 
-        self.bind("<Return>", self.ok)
+        self.bind("<Return>", self.savesetting)
         self.bind("<Escape>", self.cancel)
 
         box.pack()
+
+    def savesetting(self):
+        global folder_scan, main_settings
+        print("savesettings")
+        self.ok(folder_scan, main_settings )
+
+
 
 
 

@@ -34,31 +34,24 @@ class Settings():
     def loader(self):
         print("loading settings -- change path?/chose path?")
         with open("settings.txt","r")as f:
-            settings = json.load(f)
-        print(settings)
-        for item in settings:
-            main_settings[item] = settings[item]
+            main_settings = json.load(f)
         with open("folders.txt","r")as f:
-            folders = json.load(f)
-        print(folders)
-        for item in folders:
-            folders_scan[item] = folders[item]
+            folders_scan = json.load(f)
         return main_settings, folders_scan    #returns a tuple
     """---------------------------------------------------
     save settings function
     """
-    def save_set(self, setting):
-        print("saving settings")
-        with open("settings.txt","w") as f:
+    def save_set(self, setting, filename):
+        with open(filename,"w") as f:
             json.dump(setting, f, indent = 4) # changed order (settings, f) from (f, settings)
-        print("save_set")
         print(setting)
-
+    """
     def save_folder(self, dossier):
         print("saving folders from scan")
         with open("folders.txt", "w") as f:
             json.dump(dossier, f, indent = 4)
         print(dossier)
+    """
     """---------------------------------------------------
     """
     def load_set(self, name):
@@ -106,9 +99,9 @@ class Settings():
         """
         ?       one of the other = other       ?
         """
-    """
-    #check if dirs exist for ALL SAVED dossiers
-    def check_folders(self, folder_scan):
+        """
+        #check if dirs exist for ALL SAVED dossiers
+        def check_folders(self, folder_scan):
         """
         #ONLY DO THIS FOR INPUT DOSSIER? ? ? ?
         """
@@ -132,7 +125,7 @@ class Settings():
                         scanpath = folder_scan[key]['path'] + "//" + maps + "//" + item
                         print(scanpath)
                         self.create_dirs(scanpath)
-    """
+        """
     #check if dirs exist for SPECIFIC dossiers
     def dossier_dir(self, folder_scan):
         """

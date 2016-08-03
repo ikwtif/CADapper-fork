@@ -43,8 +43,6 @@ class Functions(Settings):
         """
         main_settings = {}
         folder_scan = {}
-        global main_settings, folder_scan
-        print("loading settings/folders *.txt")
         mains, folder_s = self.loader()                         # returns a tuple, from settings.py
         print(mains, folder_s)
         for item in mains:
@@ -101,7 +99,7 @@ class Functions(Settings):
                 self.values[key].delete(0, tk.END)
                 self.values[key].insert(0, value)
 
-    def xlscheck(self, dossier, event=None):
+    def xlscheck(self, dossier, folder_scan, event=None):
         """
         checks for ONE existing xls or lets you chose if non existent/multiple
         defaults to NONE when not manually chosen
@@ -179,15 +177,15 @@ class Functions(Settings):
         print('folder_scan:\n', folder_scan)
 
 
-    def ok(self, event=None):
+    def ok(self, fold, main, event=None):
         """
         Saves settings
         """
-        global folder_scan
-        print("saving: \n", main_settings)
-        print("saving: \n", folder_scan)
-        self.save_set(main_settings)
-        self.save_folder(folder_scan)
+        global folder_scan, main_settings
+        print("saving: \n", main)
+        print("saving: \n", fold)
+        self.save_set(main, "settings.txt")
+        self.save_set(fold, "folders.txt")
         self.cancel()
 
     def cancel(self, event=None):

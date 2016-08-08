@@ -1,10 +1,10 @@
 import os
 import json
-
+"""
 main_settings = {}
 
 folders_scan = {}
-
+"""
 folder_structure = {
     'Foto\'s': None,
     'Plannen': None,
@@ -34,10 +34,10 @@ class Settings():
     def loader(self):
         print("loading settings -- change path?/chose path?")
         with open("settings.txt","r")as f:
-            main_settings = json.load(f)
+            self.main_settings = json.load(f)
         with open("folders.txt","r")as f:
-            folders_scan = json.load(f)
-        return main_settings, folders_scan    #returns a tuple
+            self.folders_scan = json.load(f)
+        return self.main_settings, self.folders_scan    #returns a tuple
     """---------------------------------------------------
     save settings function
     """
@@ -132,7 +132,7 @@ class Settings():
         create dictionary structure for specific dossier folder
         so we can check against existing structure
         """
-        global folder_structure
+        #global folder_structure
         for folder, subfolder in folder_structure.items():
             if subfolder == None:
                 scanpath = folder_scan['path'] + "//" + maps

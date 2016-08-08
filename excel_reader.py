@@ -31,6 +31,8 @@ def read_excel(dossier=None):
         "architect": first_sheet.cell(14,1).value,
         "architect straat": arch_adress[0],
         "architect gemeente": arch_adress[1],
+        "architect gsm": first_sheet.cell(14,3).value,
+        "architect email": first_sheet.cell(14,6).value,
         "aannemer": first_sheet.cell(25,1).value,
         "aannemer straat": aa_adress[0],
         "aannemer gemeente": aa_adress[1],

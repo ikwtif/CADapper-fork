@@ -137,10 +137,13 @@ FIELDS = [
     "architect",
     "architect straat",
     "architect gemeente",
+    "architect tel",
+    "architect email",
     "aannemer",
     "aannemer straat",
     "aannemer gemeente",
-    "ingenieur"]
+    "ingenieur",
+    "ingenieur email"]
 
 
 
@@ -185,10 +188,13 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.name = tk.Label(box_info, anchor="e", justify="center", font=LARGE_FONT)
         self.name.grid(row=2, column=1, sticky = tk.W, padx=5,pady=5)
         #create buttons
+        self.mbuttons_open = ttk.Button(box_buttons, text = 'open dossier', command= self.openfolder)
         self.mbutton_caps = ttk.Button(box_buttons, text = 'convert to caps', command=self.get_caps)
         self.mbutton_caps.grid(row= 0, column= 0, padx=5,pady=5)
         self.mbutton_files = ttk.Button(box_buttons, text = 'move files', command= self.move_backup)
         self.mbutton_files.grid(row=0, column= 1, padx=5,pady=5)
+        self.mbutton_cad = ttk.Button(box_buttons, text = 'save xls for cad', command = self.save_cad)
+        self.mbutton_cad.grid(row=0, column=2, padx=5, pady=5)
 
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
@@ -210,7 +216,8 @@ class StartPage(CADapp, tk.Frame, Functions):
         else:
             messagebox.showwarning("error", "not a number")
 
-
+    def openfolder():
+        pass
 
 
 
@@ -248,9 +255,9 @@ class Dialog(CADapp, tk.Toplevel, Functions):
 
     def buttonbox(self):
         box = tk.Frame(self, pady=40)
-        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder())                             #
+        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder(main_settings))                             #
         w.grid(column=3, row=1)
-        w = ttk.Button(box, text="Select folder", width=10, command = self.select_folder)                           #
+        w = ttk.Button(box, text="Select folder", width=10, command=lambda: self.select_folder(main_settings))                           #
         w.grid(column=2, row=1)
         w = ttk.Button(box, text="Save", width=10, command=self.savesetting, default=tk.ACTIVE)
         w.grid(column= 0, row = 1)
@@ -263,6 +270,11 @@ class Dialog(CADapp, tk.Toplevel, Functions):
         self.bind("<Escape>", self.cancel)
 
         box.pack()
+
+    def select(self):
+        global main_settings
+        print("selecting folder\n", main_settings)
+        self.select_folder(main_settings)
 
     def savesetting(self):
         global folder_scan, main_settings

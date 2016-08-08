@@ -8,6 +8,7 @@ from settings import Settings
 from excel_reader import read_excel
 from save_a_pdf import GetSave
 from tkinter import messagebox
+from excel_cad import xlstocad
 
 CAPS_TEMPLATE = """\
 {0[bouwheer]}
@@ -80,6 +81,13 @@ class Functions(Settings):
         new_dict = {k:v.get() for k,v in self.values.items()}       #self.values from def initialise
         GetSave(new_dict)                                           #imported method from save_a_pdf.py
 
+    def save_cad(self):
+        new_dict = {k:v.get() for k,v in self.values.items()}
+        print("creating dictionary:\n", new_dict)
+        xlstocad(new_dict)
+
+
+
     def get_caps(self):
         """
         Capitalise data in entry boxes and update textbox
@@ -138,6 +146,12 @@ class Functions(Settings):
                 print("passing")
                 continue
 
+    def openfolder(self):
+        dossier = self.dossier.get()
+
+
+
+
 
     """
     #####################################################################
@@ -145,8 +159,9 @@ class Functions(Settings):
     #####################################################################
     """
 
-    def select_folder(self, event=None):
+    def select_folder(self, settings, event=None):
         print("setting: manually select main folder")
+        global main_settings
         self.main_dir = askdirectory()
         if not self.main_dir:
             print("nothing selected")   # add popup message
@@ -162,26 +177,26 @@ class Functions(Settings):
             """
         else:
             print("saving settings \n")
-            main_settings["directory"] = self.main_dir      #remove(?)
+            settings["directory"] = self.main_dir      #remove(?)
             self.dir_label['text'] = self.main_dir          # update label
         """?    change above settings save,
         only save when pressing ok???"""
 
-    def scan_folder(self):
+    def scan_folder(self, settings):
         print("scanning folder, needs to check for removed folders\n")
-        s = self.read_folders(main_settings["directory"])   # from import Settings, main directory path
-        global folder_scan                                  # clear dict first to not keep removed folders
-        folder_scan = {}
+        s = self.read_folders(settings["directory"])   # from import Settings, main directory path
+        #global folder_scan                                  # clear dict first to not keep removed folders
+        self.folder_scan = {}
         for item in s:
-            folder_scan[item] = s[item]
-        print('folder_scan:\n', folder_scan)
+            self.folder_scan[item] = s[item]
+        print('folder_scan:\n', self.folder_scan)
 
 
     def ok(self, fold, main, event=None):
         """
         Saves settings
         """
-        global folder_scan, main_settings
+        #global folder_scan, main_settings
         print("saving: \n", main)
         print("saving: \n", fold)
         self.save_set(main, "settings.txt")

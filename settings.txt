@@ -1,3 +1,1 @@
-{
-    "directory": "C:/data/server"
-}
+{"directory": "none selected"}

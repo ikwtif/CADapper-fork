@@ -27,31 +27,51 @@ folder_structure = {
 
 class Settings():
     # dossier = dict in dict -- dossier[nr][name or path]
-    """
-    full loading settings function for CADapp __init__
-    """
     # load main settings
-    def loader(self):
-        print("loading settings -- change path?/chose path?")
-        with open("settings.txt","r")as f:
-            self.main_settings = json.load(f)
-        with open("folders.txt","r")as f:
-            self.folders_scan = json.load(f)
-        return self.main_settings, self.folders_scan    #returns a tuple
-    """---------------------------------------------------
-    save settings function
+
     """
-    def save_set(self, setting, filename):
+    #####################################################################
+                            loading/saving functions
+    #####################################################################
+    """
+    def loader(self):
+        """
+        load setting / create default setting when none exists
+            - main settings
+            - folders
+        """
+        print("loading settings")
+        # DEFAULT settings contents
+        self.main_settings = {"directory": "none selected"}
+        self.folder_scan = {}
+        # load settings
+        settings = self.loadjson("settings.txt", self.main_settings)        # settings.py
+        folders = self.loadjson("folders.txt", self.folder_scan)
+        return settings, folders    #returns a tuple
+
+    def loadjson(self, filename, setting):
+        """
+        load filename if exists,
+            else create filename and populate with default
+        """
+        print("creating\n{} \npopulating with\n{}".format(filename, setting))
+        try:
+            with open(filename,"r") as f:
+                setting = json.load(f)
+        except:
+            print("creating", setting)
+            with open(filename,"w") as f:
+                json.dump(setting, f)
+        return setting
+
+    """---------------------------------------------------
+    save settings function              change (filename, setting) input order
+    """
+    def save_set(self, filename, setting):
         with open(filename,"w") as f:
             json.dump(setting, f, indent = 4) # changed order (settings, f) from (f, settings)
         print(setting)
-    """
-    def save_folder(self, dossier):
-        print("saving folders from scan")
-        with open("folders.txt", "w") as f:
-            json.dump(dossier, f, indent = 4)
-        print(dossier)
-    """
+
     """---------------------------------------------------
     """
     def load_set(self, name):

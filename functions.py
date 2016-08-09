@@ -28,7 +28,9 @@ CAPS_TEMPLATE = """\
 
 {0[ingenieur]}"""
 
-
+"""
+ADD backup move for CAD START DWGs and linked XLS files in move_backup
+"""
 
 class Functions(Settings):
 
@@ -129,12 +131,10 @@ class Functions(Settings):
 
     def move_backup(self):
         print("moving backups")
-        struct = self.structure()
-        print(struct)
-        """ need to redo code, change creation of paths"""
+        """ need to redo code, change creation of paths, see next method"""
         path = os.path.dirname(os.path.realpath(sys.argv[0]))   # working directory path
         staal_path = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Meetstaat & borderel//"
-        backup_path = path + "//Backups"
+        backup_path = path + "//Backups/Staal"
         print("check if files already exist")
         for filename in os.listdir(backup_path):
             s_path = staal_path + "//" + filename
@@ -142,6 +142,27 @@ class Functions(Settings):
             if os.path.isfile(s_path) == False:
                 print(" copy", filename)
                 shutil.copy(direct, staal_path)
+            else:
+                print("passing")
+                continue
+        """
+        ADD backup move for CAD START DWGs and linked XLS files
+        """
+    def move_dwg(self):
+        print("moving backup dwg & xls")
+        path = os.path.dirname(os.path.realpath(sys.argv[0]))
+        cad_path = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Stabiliteitsplannen//"
+        backup_path = path + "//Backups//Cad"
+        print("check if files already exist")
+        """
+        change with try ? Make seperate function??? since same as move_backup
+        """
+        for filename in os.listdir(backup_path):
+            dwg = cad_path + "//" + filename
+            direct = backup_path + "//" + filename
+            if os.path.isfile(dwg) == False:
+                print("copy", filename)
+                shutil.copy(direct, dwg)
             else:
                 print("passing")
                 continue
@@ -184,23 +205,24 @@ class Functions(Settings):
 
     def scan_folder(self, settings):
         print("scanning folder, needs to check for removed folders\n")
-        s = self.read_folders(settings["directory"])   # from import Settings, main directory path
-        #global folder_scan                                  # clear dict first to not keep removed folders
+        s = self.read_folders(settings["directory"])        # Settings.py, main directory path
+        # clear dict first to not keep removed folders
         self.folder_scan = {}
         for item in s:
             self.folder_scan[item] = s[item]
-        print('folder_scan:\n', self.folder_scan)
+        print('folder_scan:\n {}'.format(self.folder_scan))
 
 
     def ok(self, fold, main, event=None):
         """
-        Saves settings
+        content = fold, main
+        Saves settings with (filename, content)
         """
         #global folder_scan, main_settings
         print("saving: \n", main)
         print("saving: \n", fold)
-        self.save_set(main, "settings.txt")
-        self.save_set(fold, "folders.txt")
+        self.save_set("settings.txt", main)
+        self.save_set("folders.txt", fold)
         self.cancel()
 
     def cancel(self, event=None):

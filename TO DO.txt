@@ -1,0 +1,20 @@
+
+
+
+
+TO DO
+
+    - change requesting specific folder path from structure
+
+    - move backup files /
+        -renaming/copy to specific paths
+
+    -dossier reference nr (user input)
+        DONE - auto locate *.xls file by user input and get excel data
+                 DONE - create dossier folder path
+                 DONE - find *.xls file in dossier map
+    -create pdf save path, append "//Stabiliteit//Plannen pdf"
+                to dossier path
+
+    - load settings and put them into the variables outside classes
+               because not manually selecting means saving empty settings

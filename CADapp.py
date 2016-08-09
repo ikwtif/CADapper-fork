@@ -21,35 +21,6 @@ import functions
 """
 main menu file with class structure
 
-TO DO
-    - load settings at startup
-        DONE - main directory path
-        DONE - dict dossier folders
-
-    - move backup files /
-        -renaming/copy to specific paths
-
-    -settings menu
-        - storing settings with json when 'ok' is pressed
-        DONE - create scan option for dossier folders
-
-    -dossier reference nr (user input)
-        DONE - auto locate *.xls file by user input and get excel data
-                 DONE - create dossier folder path
-                 DONE - find *.xls file in dossier map
-    -create pdf save path, append "//Stabiliteit//Plannen pdf"
-                to dossier path
-
-
-ISSUES
-    DONE - settings reset when reopening settings menu after pressing ok
-             ONLY happens after reload program after pressin ok in settings
-
-               need to load settings and put them into the variables outside classes
-               because not manually selecting means saving empty settings
-
-    - UPDATE DOSSIERS
-        - does not remove dossier when map is removed
 """
 
 '''The point of a computer is ....
@@ -87,6 +58,7 @@ class CADapp(tk.Frame, Functions):
         self.show_frame(StartPage)                  # show starting frame
 
         main_settings, folder_scan = self.loading()
+        print("fully loaded\n", main_settings, "\n", folder_scan)
     """
     def loading(self):
         print("loading settings/folders *.txt")
@@ -191,10 +163,12 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.mbuttons_open = ttk.Button(box_buttons, text = 'open dossier', command= self.openfolder)
         self.mbutton_caps = ttk.Button(box_buttons, text = 'convert to caps', command=self.get_caps)
         self.mbutton_caps.grid(row= 0, column= 0, padx=5,pady=5)
-        self.mbutton_files = ttk.Button(box_buttons, text = 'move files', command= self.move_backup)
+        self.mbutton_files = ttk.Button(box_buttons, text = 'move xls files', command= self.move_backup)
         self.mbutton_files.grid(row=0, column= 1, padx=5,pady=5)
+        self.mbutton_files = ttk.Button(box_buttons, text = 'move cad files', command = self.move_dwg)
+        self.mbutton_files.grid(row=0, column=2, padx=5,pady=5)
         self.mbutton_cad = ttk.Button(box_buttons, text = 'save xls for cad', command = self.save_cad)
-        self.mbutton_cad.grid(row=0, column=2, padx=5, pady=5)
+        self.mbutton_cad.grid(row=0, column=3, padx=5, pady=5)
 
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
@@ -233,6 +207,7 @@ class Dialog(CADapp, tk.Toplevel, Functions):
     def __init__(self, parent, title = None):
         print("initiating settings")
         tk.Toplevel.__init__(self, parent)
+        global main_settings
         if title:
             self.title("settings")
         self.body()

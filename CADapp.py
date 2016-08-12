@@ -1,5 +1,5 @@
 import sys
-import shutil   # to copy files
+import shutil   # copy files
 import os
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -17,7 +17,6 @@ import functions
 
 
 
-
 """
 main menu file with class structure
 
@@ -30,12 +29,6 @@ code 13 times, you are doing the computer's job!'''
 LARGE_FONT= ("Verdana", 12)
 
 
-main_settings = {
-    "directory":""
-    }
-
-folder_scan = {
-    }
 
 
 
@@ -57,8 +50,8 @@ class CADapp(tk.Frame, Functions):
             frame.grid(row= 0, column= 0, sticky="nsew", padx=5,pady=5)
         self.show_frame(StartPage)                  # show starting frame
 
-        main_settings, folder_scan = self.loading()
-        print("fully loaded\n", main_settings, "\n", folder_scan)
+        self.loading()
+        print("fully loaded\n", functions.main_settings, "\n", functions.folder_scan)
     """
     def loading(self):
         print("loading settings/folders *.txt")
@@ -160,28 +153,33 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.name = tk.Label(box_info, anchor="e", justify="center", font=LARGE_FONT)
         self.name.grid(row=2, column=1, sticky = tk.W, padx=5,pady=5)
         #create buttons
-        self.mbuttons_open = ttk.Button(box_buttons, text = 'open dossier', command= self.openfolder)
-        self.mbutton_caps = ttk.Button(box_buttons, text = 'convert to caps', command=self.get_caps)
+        self.mbuttons_open = ttk.Button(box_buttons, text = 'open dossier', command = self.openfolder)
+        self.mbuttons_open.grid(row=1, column=0, padx=5, pady=5)
+        self.mbutton_caps = ttk.Button(box_buttons, text = 'convert to caps', command = self.get_caps)
         self.mbutton_caps.grid(row= 0, column= 0, padx=5,pady=5)
-        self.mbutton_files = ttk.Button(box_buttons, text = 'move xls files', command= self.move_backup)
+        self.mbutton_files = ttk.Button(box_buttons, text = 'move xls files', command = self.move_xls)
         self.mbutton_files.grid(row=0, column= 1, padx=5,pady=5)
         self.mbutton_files = ttk.Button(box_buttons, text = 'move cad files', command = self.move_dwg)
         self.mbutton_files.grid(row=0, column=2, padx=5,pady=5)
         self.mbutton_cad = ttk.Button(box_buttons, text = 'save xls for cad', command = self.save_cad)
         self.mbutton_cad.grid(row=0, column=3, padx=5, pady=5)
-
+        self.mbutton_create = ttk.Button(box_buttons, text = 'create folders', command=lambda: self.dossier_dir(functions.folder_scan))
+        self.mbutton_create.grid(row=0, column=4, padx=5, pady=5)
+        self.mbutton_create = ttk.Button(box_buttons, text = 'xlstomeetstaat', command = self.save_meetstaat)
+        self.mbutton_create.grid(row=0, column=5, padx=5, pady=5)
+        
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
 
     def searchdossier(self, event = None):
         print("searches datafile for dossier: *.xls")
-        global folder_scan
-        print('folder scan searchdossier: \n',folder_scan)
+        #global folder_scan
+        print('folder scan searchdossier: \n',functions.folder_scan)
         dossier = self.dossier.get()                                    # gets dossier from entry
         if dossier.isdigit():                                           # check for integer
-            xlspath = self.xlscheck(dossier, folder_scan)                            # creates path for xls, xlscheck from functions.py
+            xlspath = self.xlscheck(dossier, functions.folder_scan)                            # creates path for xls, xlscheck from functions.py
             if xlspath is not None:
-                self.name['text'] = folder_scan[dossier]['name']            # set label text to name
+                self.name['text'] = functions.folder_scan[dossier]['name']            # set label text to name
                 #self.dossier_dir(folder_scan[dossier])                     # check folders for dossier and creates missing folders, dossier_dir from settings.py
                 xlsdata = self.xlsgetdata(xlspath)                          # gets data
                 page = self.master.frames[StartPage]                        # !!!!!!!!!!!!!!!!!!!!!!
@@ -190,8 +188,7 @@ class StartPage(CADapp, tk.Frame, Functions):
         else:
             messagebox.showwarning("error", "not a number")
 
-    def openfolder():
-        pass
+
 
 
 
@@ -224,37 +221,37 @@ class Dialog(CADapp, tk.Toplevel, Functions):
         box = tk.Frame(self, pady=40)
         label = tk.Label(box, text="main directory",  relief = tk.RAISED)
         label.grid(column=0, row=0)
-        self.dir_label = tk.Label(box, text = main_settings["directory"], relief = tk.RIDGE)
+        self.dir_label = tk.Label(box, text = functions.main_settings["directory"], relief = tk.RIDGE)
         self.dir_label.grid(column=1, row=0)
         box.pack()
 
     def buttonbox(self):
         box = tk.Frame(self, pady=40)
-        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder(main_settings))                             #
+        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder())                             #
         w.grid(column=3, row=1)
-        w = ttk.Button(box, text="Select folder", width=10, command=lambda: self.select_folder(main_settings))                           #
+        w = ttk.Button(box, text="Select folder", width=10, command=lambda: self.select_folder())                           #
         w.grid(column=2, row=1)
         w = ttk.Button(box, text="Save", width=10, command=self.savesetting, default=tk.ACTIVE)
         w.grid(column= 0, row = 1)
         w = ttk.Button(box, text="Cancel", width=10, command=self.cancel)
         w.grid(column= 1, row = 1)
-        w = ttk.Button(box, text="Scan dirs", width=10, command=lambda: self.check_folders(folder_scan))
-        w.grid(column = 4, row = 1)
+        #w = ttk.Button(box, text="Scan dirs", width=10, command=lambda: self.check_folders(folder_scan))
+        #w.grid(column = 4, row = 1)
 
         self.bind("<Return>", self.savesetting)
         self.bind("<Escape>", self.cancel)
 
         box.pack()
-
+    """
+    REMOVE THIS
     def select(self):
         global main_settings
         print("selecting folder\n", main_settings)
         self.select_folder(main_settings)
-
+    """
     def savesetting(self):
-        global folder_scan, main_settings
         print("savesettings")
-        self.ok(folder_scan, main_settings )
+        self.ok()
 
 
 

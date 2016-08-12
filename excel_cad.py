@@ -2,7 +2,10 @@ import xlrd, xlutils
 from xlrd import open_workbook
 from xlutils.copy import copy2
 
-
+"""
+change paths
+add date stamp
+"""
 
 
 
@@ -48,6 +51,79 @@ def xlstocad(data):
         outbook.save("data.xls")
         row += 2
         column += 2
+
+def xlstomeetstaat(data, folder_scan):
+    structure = ['dossier',
+                 'werfadres',
+                 'werfgemeente',
+                 'bouwheer',
+                 'architect',
+                 'architect straat',
+                 'architect gemeente',
+                 'aannemer'
+                 ]
+
+    cell = ['0','1',
+            '1','1',
+            '2','1',
+            '3','1',
+            '4','1',
+            '5','1',
+            '6','1',
+            '7','1',
+            ]
+    
+    print("initiate xlstomeetstaat")
+    xlspath = folder_scan[data['dossier']]['path'] + "//Stabiliteit//Meetstaat & borderel//data meetstaat&borderel.xls"
+    print(xlspath)
+    inbook = open_workbook(xlspath, formatting_info = True)
+    insheet = inbook.sheet_by_index(0)
+    outbook, outstyle = copy2(inbook)
+    row=0
+    column=1
+    print(structure)
+    for item in structure:
+        print(item)
+        xf_index = insheet.cell_xf_index(int(cell[row]), int(cell[column]))
+        saved_style = outstyle[xf_index]
+        outbook.get_sheet(0).write(int(cell[row]), int(cell[column]), data[item], saved_style)
+        outbook.save(xlspath)
+        row += 2
+        column += 2
+
+
+
+
+
+
+def xlstoborderel(data):
+    structure = ['ingenieur',
+                'ingenieur email',
+                'architect',
+                'architect straat',
+                'architect gemeente',
+                'architect tel',
+                'architect email',
+                'bouwheer',
+                'woning straat',
+                'woning gemeente',
+                'werfadres',
+                'werfgemeente'
+                ]
+
+    cell = ['7','2',
+            '8','2',
+            '11','2',
+            '12','2',
+            '13','2',
+            '14','2',
+            '15','2',
+            '18','2',
+            '19','2',
+            '20','2',
+            '22','2',
+            '23','2'
+            ]
 
 
 def xlstocad2():

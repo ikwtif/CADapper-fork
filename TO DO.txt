@@ -18,3 +18,16 @@ TO DO
 
     - load settings and put them into the variables outside classes
                because not manually selecting means saving empty settings
+
+
+
+DONE
+
+fixed global variables for settings/folders
+
+fixed moving backups 	--- still need to clean up methods  
+			--- does not work when folders do not exist
+
+
+path for excel data cad file so it gets put in dossier folder?
+	---- edit file in dossier folder, not in working dir  ----

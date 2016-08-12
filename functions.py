@@ -8,7 +8,16 @@ from settings import Settings
 from excel_reader import read_excel
 from save_a_pdf import GetSave
 from tkinter import messagebox
-from excel_cad import xlstocad
+from excel_cad import xlstocad, xlstomeetstaat, xlstoborderel
+from datetime import datetime
+
+main_settings = {
+    "directory":""
+    }
+
+folder_scan = {
+    }
+
 
 CAPS_TEMPLATE = """\
 {0[bouwheer]}
@@ -44,6 +53,7 @@ class Functions(Settings):
         """
         loads settings main app and dossiers
         """
+        global main_settings, folder_scan
         main_settings = {}
         folder_scan = {}
         mains, folder_s = self.loader()                         # returns a tuple, from settings.py
@@ -53,7 +63,7 @@ class Functions(Settings):
         for item in folder_s:
             folder_scan[item] = folder_s[item]
         print("succesfully loaded \n {} \n {} ".format(main_settings, folder_scan))
-        return main_settings, folder_scan
+
 
 
     def xlsgetdata(self, dossier=None):
@@ -75,6 +85,9 @@ class Functions(Settings):
                             startpage functions
     #####################################################################
     """
+    def openfolder(self):
+        print("opening dossier")
+        os.startfile(folder_scan[self.dossier.get()]['path'])
 
     def save_pdf(self):
         """
@@ -88,6 +101,11 @@ class Functions(Settings):
         print("creating dictionary:\n", new_dict)
         xlstocad(new_dict)
 
+    def save_meetstaat(self):
+        new_dict = {k:v.get() for k,v in self.values.items()}
+        new_dict['dossier'] = self.dossier.get()
+        print("creating dictionary:\n", new_dict)
+        xlstomeetstaat(new_dict, folder_scan)
 
 
     def get_caps(self):
@@ -129,46 +147,72 @@ class Functions(Settings):
                 print("no selection made")
 
 
-    def move_backup(self):
-        print("moving backups")
-        """ need to redo code, change creation of paths, see next method"""
-        path = os.path.dirname(os.path.realpath(sys.argv[0]))   # working directory path
-        staal_path = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Meetstaat & borderel//"
-        backup_path = path + "//Backups/Staal"
+    def move_xls(self):
+        print("moving backup borderel&meetstaat")
+        src_dir = os.path.dirname(os.path.realpath(sys.argv[0])) + "//Backups/Staal"   # working directory path
+        dst_dir = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Meetstaat & borderel//"
         print("check if files already exist")
-        for filename in os.listdir(backup_path):
-            s_path = staal_path + "//" + filename
-            direct = backup_path + "//" + filename
-            if os.path.isfile(s_path) == False:
-                print(" copy", filename)
-                shutil.copy(direct, staal_path)
-            else:
-                print("passing")
-                continue
+        print("source:", src_dir)
+        print("destination:", dst_dir)
+        self.copyfiles(src_dir, dst_dir)
         """
-        ADD backup move for CAD START DWGs and linked XLS files
+        Needs to create maps if not existing
+        same as move dwg, seperate function?
         """
+        #add renaming filename
+
     def move_dwg(self):
-        print("moving backup dwg & xls")
-        path = os.path.dirname(os.path.realpath(sys.argv[0]))
-        cad_path = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Stabiliteitsplannen//"
-        backup_path = path + "//Backups//Cad"
+        print("moving backup dwg&xls")
+        src_dir = os.path.dirname(os.path.realpath(sys.argv[0])) + "//Backups//Cad"
+        dst_dir = folder_scan[self.dossier.get()]['path'] + "//Stabiliteit//Stabiliteitsplannen//"
         print("check if files already exist")
         """
         change with try ? Make seperate function??? since same as move_backup
         """
-        for filename in os.listdir(backup_path):
-            dwg = cad_path + "//" + filename
-            direct = backup_path + "//" + filename
-            if os.path.isfile(dwg) == False:
-                print("copy", filename)
-                shutil.copy(direct, dwg)
+        self.copyfiles(src_dir, dst_dir)
+        #add renaming filename
+
+    def copyfiles(self, src_dir, dst_dir):
+        """
+        copies all files in src_dir to dst_dir
+        """
+        for filename in os.listdir(src_dir):
+            dst_file = os.path.join(dst_dir, filename)
+            src_file = os.path.join(src_dir, filename)
+            if os.path.isfile(dst_file) == False:
+                shutil.copy(src_file, dst_file)
+                self.changename(filename)
             else:
-                print("passing")
+                print("existing: add replace function?\n", filename)
                 continue
 
-    def openfolder(self):
-        dossier = self.dossier.get()
+
+    def changename(self, filename):
+        
+        if filename.endswith('.dwg'):
+            date = datetime.now()
+            print(date)
+            print(type(date))
+            newname = "stabiliteitsplan"
+            creator = "ddb"
+            dossier = self.dossier.get()
+            newfilename = date + "_" + newname + "_" + creator + "_" + dossier
+            dst_newfilename = os.path.join(dst_dir, newfilename)
+            os.rename(dst_file, dst_newfilename)
+
+        """
+        change filename
+        example:
+        def copy_rename(old_file_name, new_file_name):
+        src_dir= os.curdir
+        dst_dir= os.path.join(os.curdir , "subfolder")
+        src_file = os.path.join(src_dir, old_file_name)
+        shutil.copy(src_file,dst_dir)
+        
+        dst_file = os.path.join(dst_dir, old_file_name)
+        new_dst_file_name = os.path.join(dst_dir, new_file_name)
+        os.rename(dst_file, new_dst_file_name)
+        """
 
 
 
@@ -180,7 +224,7 @@ class Functions(Settings):
     #####################################################################
     """
 
-    def select_folder(self, settings, event=None):
+    def select_folder(self, event=None):
         print("setting: manually select main folder")
         global main_settings
         self.main_dir = askdirectory()
@@ -197,32 +241,36 @@ class Functions(Settings):
             False
             """
         else:
-            print("saving settings \n")
-            settings["directory"] = self.main_dir      #remove(?)
+            print("saving settings \n need to remove (?) next line, only save when pressing button")
+            """does not save, but stores in memory check vs save file on loading settings?
+               or somehow remove when going back to settings"""
+            main_settings["directory"] = self.main_dir #remove
             self.dir_label['text'] = self.main_dir          # update label
         """?    change above settings save,
         only save when pressing ok???"""
 
-    def scan_folder(self, settings):
+    def scan_folder(self):
+        global main_settings, folder_scan
         print("scanning folder, needs to check for removed folders\n")
-        s = self.read_folders(settings["directory"])        # Settings.py, main directory path
+        s = self.read_folders(main_settings["directory"])        # Settings.py, main directory path
         # clear dict first to not keep removed folders
-        self.folder_scan = {}
+        folder_scan = {}
         for item in s:
-            self.folder_scan[item] = s[item]
-        print('folder_scan:\n {}'.format(self.folder_scan))
+            folder_scan[item] = s[item]
+        print('folder_scan:\n {}'.format(folder_scan))
 
 
-    def ok(self, fold, main, event=None):
+    def ok(self, event=None):
+        global folder_scan, main_settings
         """
         content = fold, main
         Saves settings with (filename, content)
         """
         #global folder_scan, main_settings
-        print("saving: \n", main)
-        print("saving: \n", fold)
-        self.save_set("settings.txt", main)
-        self.save_set("folders.txt", fold)
+        print("saving: \n", main_settings)
+        print("saving: \n", folder_scan)
+        self.save_set("settings.txt", main_settings)
+        self.save_set("folders.txt", folder_scan)
         self.cancel()
 
     def cancel(self, event=None):

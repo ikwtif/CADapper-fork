@@ -1,10 +1,7 @@
 import os
 import json
-"""
-main_settings = {}
 
-folders_scan = {}
-"""
+
 folder_structure = {
     'Foto\'s': None,
     'Plannen': None,
@@ -47,6 +44,7 @@ class Settings():
         # load settings
         settings = self.loadjson("settings.txt", self.main_settings)        # settings.py
         folders = self.loadjson("folders.txt", self.folder_scan)
+        print("returning\n settings:{}\n folders:{}".format(settings, folders))
         return settings, folders    #returns a tuple
 
     def loadjson(self, filename, setting):
@@ -103,17 +101,17 @@ class Settings():
         returns dictionary with name,path for each folder(/dossier)
         from foldernames structure 'dossier - name'
         """
-        print("reading folders: dossier/name/path")
-        self.dossier = {}
+        print("reading folders: dossier/name/path\n", scanpath)
+        dossier = {}
         dirs = os.listdir(scanpath)
         for folder in dirs:
             path = os.path.join(scanpath, folder)
             if ' - ' in folder and os.path.isdir(path):
                 print('processing\n', folder)
                 prefix, suffix = folder.split(' - ', 1)
-                self.dossier[prefix] = {"name": suffix, "path": path}
-        print("returning\n", self.dossier)
-        return self.dossier
+                dossier[prefix] = {"name": suffix, "path": path}
+        print("returning\n", dossier)
+        return dossier
 
 
         """
@@ -149,19 +147,19 @@ class Settings():
     #check if dirs exist for SPECIFIC dossiers
     def dossier_dir(self, folder_scan):
         """
-        create dictionary structure for specific dossier folder
-        so we can check against existing structure
+        creates paths for specific dossier
+            according to default dictionary structure
         """
-        #global folder_structure
+        global folder_structure
+        dossier = self.dossier.get()
         for folder, subfolder in folder_structure.items():
             if subfolder == None:
-                scanpath = folder_scan['path'] + "//" + maps
+                scanpath = folder_scan[dossier]['path'] + "//" + folder
+                self.create_dirs(scanpath)
             else:
                 for subfolder in folder_structure[folder]:
-                    scanpath = folder_scan['path'] + "//" + maps + "//" + item
-            self.create_dirs(scanpath)
-
-
+                    scanpath = folder_scan[dossier]['path'] + "//" + folder + "//" + subfolder
+                    self.create_dirs(scanpath)
 
     # create dirs if they don't exist
     def create_dirs(self, scanpath):
@@ -193,7 +191,6 @@ class Settings():
         print("create nonexisting dirs")
         try:
             print("only scans paths(?)")
-
             os.makedirs(scanpath)
         except OSError:
             if not os.path.isdir(scanpath):

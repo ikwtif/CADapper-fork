@@ -1,0 +1,18 @@
+{
+    "1000": {
+        "name": "new test",
+        "path": "C:/data/server\\1000 - new test"
+    },
+    "7521": {
+        "name": "Ronsyn - Goessens",
+        "path": "C:/data/server\\7521 - Ronsyn - Goessens"
+    },
+    "8888": {
+        "name": "test",
+        "path": "C:/data/server\\8888 - test"
+    },
+    "7447": {
+        "name": "Depril Dany",
+        "path": "C:/data/server\\7447 - Depril Dany"
+    }
+}

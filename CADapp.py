@@ -34,7 +34,7 @@ LARGE_FONT= ("Verdana", 12)
 
 class CADapp(tk.Frame, Functions):
     def __init__(self, master): # only runs one time at startup
-        global main_settings, folder_scan
+        #global main_settings, folder_scan
         tk.Frame.__init__(self, master)
         self.master = master
         #----------------
@@ -122,13 +122,12 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.body_buttons()
 
     def initialise(self):
-        """?    remove back to self ----?? test for ridge on frame"""
         box_entries = tk.Frame(self, bd=4, relief = 'ridge')
         self.values = {}
         for row, field in enumerate(FIELDS, start=3):
             label = tk.Label(box_entries, text=field, font=LARGE_FONT)
             label.grid(row=row,column=0, sticky=tk.W, padx=5,pady=5)
-            entry = tk.Entry(box_entries, width = 60)   #an Entry widget does not require a StringVar, and it does not help you any
+            entry = tk.Entry(box_entries, width = 60)
             entry.grid(row=row, column = 1)
             self.values[field] = entry
         #create text widget for CAPS convertor
@@ -167,7 +166,7 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.mbutton_create.grid(row=0, column=4, padx=5, pady=5)
         self.mbutton_create = ttk.Button(box_buttons, text = 'xlstomeetstaat', command = self.save_meetstaat)
         self.mbutton_create.grid(row=0, column=5, padx=5, pady=5)
-        
+
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
 
@@ -175,11 +174,11 @@ class StartPage(CADapp, tk.Frame, Functions):
         print("searches datafile for dossier: *.xls")
         #global folder_scan
         print('folder scan searchdossier: \n',functions.folder_scan)
-        dossier = self.dossier.get()                                    # gets dossier from entry
-        if dossier.isdigit():                                           # check for integer
-            xlspath = self.xlscheck(dossier, functions.folder_scan)                            # creates path for xls, xlscheck from functions.py
+        dossier = self.dossier.get()                                        # gets dossier from entry
+        if dossier.isdigit():                                               # check for integer
+            xlspath = self.xlscheck(dossier, functions.folder_scan)         # creates path for xls, xlscheck from functions.py
             if xlspath is not None:
-                self.name['text'] = functions.folder_scan[dossier]['name']            # set label text to name
+                self.name['text'] = functions.folder_scan[dossier]['name']  # set label text to name
                 #self.dossier_dir(folder_scan[dossier])                     # check folders for dossier and creates missing folders, dossier_dir from settings.py
                 xlsdata = self.xlsgetdata(xlspath)                          # gets data
                 page = self.master.frames[StartPage]                        # !!!!!!!!!!!!!!!!!!!!!!
@@ -227,9 +226,9 @@ class Dialog(CADapp, tk.Toplevel, Functions):
 
     def buttonbox(self):
         box = tk.Frame(self, pady=40)
-        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder())                             #
+        w = ttk.Button(box, text="Update dossiers", command=lambda: self.scan_folder()) 
         w.grid(column=3, row=1)
-        w = ttk.Button(box, text="Select folder", width=10, command=lambda: self.select_folder())                           #
+        w = ttk.Button(box, text="Select folder", width=10, command=lambda: self.select_folder())
         w.grid(column=2, row=1)
         w = ttk.Button(box, text="Save", width=10, command=self.savesetting, default=tk.ACTIVE)
         w.grid(column= 0, row = 1)
@@ -242,31 +241,10 @@ class Dialog(CADapp, tk.Toplevel, Functions):
         self.bind("<Escape>", self.cancel)
 
         box.pack()
-    """
-    REMOVE THIS
-    def select(self):
-        global main_settings
-        print("selecting folder\n", main_settings)
-        self.select_folder(main_settings)
-    """
+
     def savesetting(self):
         print("savesettings")
         self.ok()
-
-
-
-
-
-    # standard button semantics
-    """
-    ISSUE 1 (solved?)
-        MOVE saving settings when pressing ok
-           other settings?
-           put settings dict as class variable
-        saving settings should save ALL settings
-
-        also load settings from *.txt first
-    """
 
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ class Settings():
     def loadjson(self, filename, setting):
         """
         load filename if exists,
-            else create filename and populate with default
+            else create filename and populate with (default)setting
         """
         print("creating\n{} \npopulating with\n{}".format(filename, setting))
         try:

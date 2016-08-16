@@ -505,7 +505,7 @@ class GetSave(FooterCanvas):
     aannemer_gemeente = "aannemer_gemeente"
     ingenieur_naam = "ingenieur_naam"
     datum = time.strftime("%d/%m/%Y")
-    dossier_nummer = "x"
+    dossier = "x"
     """
     def add_styles(self, styles):
             #Topco
@@ -607,6 +607,3 @@ class GetSave(FooterCanvas):
                             bottomMargin=100
                             )
         doc.multiBuild(Story, canvasmaker = FooterCanvas)
-
-
-

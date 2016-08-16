@@ -65,11 +65,11 @@ class FooterCanvas(canvas.Canvas):
         self.setFont('Helvetica-Bold', 9, leading=None)
         self.drawCentredString(10.5*cm, 3*cm, 'Veiligheidscoördinatie - Topografie - EPB/EPC verslaggeving - Stabiliteitsberekeningen - Blowerdoortest')
         self.setFont('Helvetica', 9, leading=None)
-        self.drawString(2*cm, 2.6*cm, 'Kantoor: ')
-        self.drawRightString(A4[0]-2*cm, 2.6*cm, 'Tel: ')
-        self.drawString(2*cm, 2.3*cm, 'Rekening: ')
-        self.drawRightString(A4[0]-2*cm, 2.3*cm, 'Fax: ')
-        self.drawString(2*cm, 2*cm, 'BTW: ')
+        self.drawString(2*cm, 2.6*cm, 'Kantoor: Bergestraat 49/3, 9550 Herzele ')
+        self.drawRightString(A4[0]-2*cm, 2.6*cm, 'Tel: 054/59.82.82')
+        self.drawString(2*cm, 2.3*cm, 'Rekening: Belfius BE63 0688 9630 7208')
+        self.drawRightString(A4[0]-2*cm, 2.3*cm, 'Fax: 054/59.84.59')
+        self.drawString(2*cm, 2*cm, 'BTW: 0508.800.434')
         self.restoreState()
 
     def add_header(self, Story, styles):
@@ -77,8 +77,8 @@ class FooterCanvas(canvas.Canvas):
         self.I.drawHeight = 3.25*cm
         self.I.drawWidth = 3*cm
         self.T1 = Paragraph('''<para align=Left spaceb=20><font size=20>TOPCO</font><font size=10><strong>+</strong></font><font size=6>bvba</font></para>''', styles["Topco"])
-        self.T2 = Paragraph('''<font size=6>streetBergestraat 49/3 <br/> \
-        town</font>''', styles["Text"])
+        self.T2 = Paragraph('''<font size=6>Bergestraat 49/3 <br/> \
+        9550 Herzele</font>''', styles["Text"])
         self.data = [[self.I, self.T1],['',self.T2]]
         t = Table(self.data,2*[3.5*cm],2*[1.75*cm], style=[
                                                 ('ALIGN',(0,0),(1,0),'LEFT'),        # removed grid ('GRID',(0,0),(-1,-1),0.25,colors.black),
@@ -480,9 +480,9 @@ class FooterCanvas(canvas.Canvas):
         Story.append(Spacer(1, 12))
         #vragen
         self.ptext = 'Voor vragen en/of opmerkingen, gelieve ons daarvan tijdig op de hoogte te brengen. <br/> \
-        name (tel) <br/> \
-        name (tel) <br/> \
-        name (tel)'
+        Filip Vanderlinden (054/59.82.82) <br/> \
+        Jan Steenhoudt (0498/29.49.42) <br/> \
+        Maarten Van Nieuwenhove (0498/97.70.01)'
         Story.append(Paragraph(self.ptext, styles["Text"]))
         Story.append(Spacer(1, 12))
 
@@ -561,7 +561,9 @@ class GetSave(FooterCanvas):
                 ))
 
 
-    def __init__(self, newer_dict, **kwargs):
+    def __init__(self, newer_dict, pdfpath, **kwargs):
+        #self.newer_dict = newer_dict
+        self.pdfpath = pdfpath
         self.woning_naam = newer_dict['bouwheer']
         self.werf_straat = newer_dict['werfadres']
         self.werf_gemeente = newer_dict['werfgemeente']
@@ -600,7 +602,8 @@ class GetSave(FooterCanvas):
 
 
         # Build pdf
-        doc = SimpleDocTemplate("bundel.pdf", pagesize=A4,
+        #pdfpath = self.folder_scan[self.newer_dict['dossier']]['path'] + "//Stabiliteit//Algemene documenten//stabiliteitsbundel.pdf"
+        doc = SimpleDocTemplate(self.pdfpath, pagesize=A4,
                             rightMargin= 2*cm,
                             leftMargin= 2*cm,
                             topMargin= 2*cm,

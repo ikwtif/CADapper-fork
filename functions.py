@@ -11,7 +11,7 @@ from tkinter.filedialog import askopenfilename, askdirectory
 from settings import Settings
 from excel_reader import read_excel
 from save_a_pdf import GetSave
-from excel_cad import xlstocad, xlstomeetstaat, xlstoborderel
+from excel_cad import xlstocad, xlstomeetstaat
 
 
 main_settings = {
@@ -95,13 +95,17 @@ class Functions(Settings):
         os.startfile(folder_scan[self.dossier.get()]['path'])
 
     def save(self, item):
-        new_dict = getentries()
+        data = self.getentries()
+        dossierfolder = folder_scan[data['dossier']]['path']
         if item == 'pdf':
-            GetSave(new_dict)                           # imported method from save_a_pdf.py
+            pdfpath =  dossierfolder + "//Stabiliteit//Algemene documenten//stabiliteitsbundel.pdf"
+            GetSave(data, pdfpath)                          # imported method from save_a_pdf.py
         elif item == 'cad':
-            xlstocad(new_dict)                          # imported method from settings.py
+            xlspath = dossierfolder + "//Stabiliteit//Stabiliteitsplannen//data.xls"
+            xlstocad(data, xlspath)                         # imported method from excel_cad.py
         elif item == 'meetstaat':
-            xlstomeetstaat(new_dict, folder_scan)       # imported method from settings.py
+            xlspath = dossierfolder + "//Stabiliteit//Meetstaat & borderel//data meetstaat&borderel.xls"
+            xlstomeetstaat(data, xlspath)                   # imported method from excel_cad.py
             # check if still works after reloading program (folder_scan global variable)
 
     def get_caps(self):
@@ -142,8 +146,12 @@ class Functions(Settings):
             else:
                 print("no selection made")
 
-
+    #working on move_backup
     def move_backup(self, back):
+        str_back = {'staal':'//Backups/Staal',
+                'cad':'//Backups//Cad'}
+        cwd = os.path.dirname(os.path.realpath(sys.argv[0])         # working directory
+        src_dir = src_back + str_back[back]
         pass
 
 
@@ -181,7 +189,7 @@ class Functions(Settings):
             src_file = os.path.join(src_dir, filename)
             if os.path.isfile(self.dst_file) == False:
                 shutil.copy(src_file, self.dst_file)
-                self.changename(filename)
+                #self.changename(filename)
             else:
                 print("existing: add replace function?\n", filename)
                 continue

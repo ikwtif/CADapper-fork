@@ -9,7 +9,7 @@ add date stamp
 
 
 
-def xlstocad(data):
+def xlstocad(data, xlspath):
     structure = ['ingenieur',
                 'ingenieur email',
                 'architect',
@@ -39,7 +39,8 @@ def xlstocad(data):
             ]
 
     print("initiate xlstocad")
-    inbook = open_workbook("data.xls", formatting_info = True)
+    #xlspath = folder_scan[data['dossier']]['path'] + "//Stabiliteit//Stabiliteitsplannen//data.xls"
+    inbook = open_workbook(xlspath, formatting_info = True)
     insheet = inbook.sheet_by_index(0)
     outbook, outstyle = copy2(inbook)
     row=0
@@ -48,11 +49,11 @@ def xlstocad(data):
         xf_index = insheet.cell_xf_index(int(cell[row]), int(cell[column]))
         saved_style = outstyle[xf_index]
         outbook.get_sheet(0).write(int(cell[row]), int(cell[column]), data[item], saved_style)
-        outbook.save("data.xls")
+        outbook.save(xlspath)
         row += 2
         column += 2
 
-def xlstomeetstaat(data, folder_scan):
+def xlstomeetstaat(data, xlspath):
     structure = ['dossier',
                  'werfadres',
                  'werfgemeente',
@@ -74,7 +75,7 @@ def xlstomeetstaat(data, folder_scan):
             ]
     
     print("initiate xlstomeetstaat")
-    xlspath = folder_scan[data['dossier']]['path'] + "//Stabiliteit//Meetstaat & borderel//data meetstaat&borderel.xls"
+    #xlspath = folder_scan[data['dossier']]['path'] + "//Stabiliteit//Meetstaat & borderel//data meetstaat&borderel.xls"
     print(xlspath)
     inbook = open_workbook(xlspath, formatting_info = True)
     insheet = inbook.sheet_by_index(0)
@@ -95,7 +96,7 @@ def xlstomeetstaat(data, folder_scan):
 
 
 
-
+"""
 def xlstoborderel(data):
     structure = ['ingenieur',
                 'ingenieur email',
@@ -143,7 +144,7 @@ def xlstocad2():
 
 if __name__ == "__main__":
     xlstocad2()
-
+"""
 """
 from xlrd import open_workbook
 from xlutils.copy import copy
@@ -176,6 +177,13 @@ def xlstocad(data):
 
 
 """
+
+DO NOT REMOVE
+
+
+
+
+
 First you need that patch function by John Machin provided in a very similar question:
 
 from xlutils.filter import process,XLRDReader,XLWTWriter

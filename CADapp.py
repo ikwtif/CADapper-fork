@@ -80,7 +80,7 @@ class Menu(tk.Menu):
         #filemenu.add_command(label="select file", command=master.selecting)
         filemenu.add_command(label="settings", command=lambda: Dialog(master))
         """?    somehow works"""
-        filemenu.add_command(label="save pdf", command=lambda: self.master.frames[StartPage].save_pdf())  #better call for this???
+        filemenu.add_command(label="save pdf", command=lambda: self.master.frames[StartPage].save('pdf'))  #better call for this???
         filemenu.add_separator()    #adding divider
         filemenu.add_command(label="exit", command = quit)
         #add filemenu to menubar
@@ -156,17 +156,19 @@ class StartPage(CADapp, tk.Frame, Functions):
         self.mbuttons_open.grid(row=1, column=0, padx=5, pady=5)
         self.mbutton_caps = ttk.Button(box_buttons, text = 'convert to caps', command = self.get_caps)
         self.mbutton_caps.grid(row= 0, column= 0, padx=5,pady=5)
-        self.mbutton_files = ttk.Button(box_buttons, text = 'move xls files', command = self.move_xls)
+        self.mbutton_files = ttk.Button(box_buttons, text = 'MOVE xls files', command = self.move_xls)
         self.mbutton_files.grid(row=0, column= 1, padx=5,pady=5)
-        self.mbutton_files = ttk.Button(box_buttons, text = 'move cad files', command = self.move_dwg)
+        self.mbutton_files = ttk.Button(box_buttons, text = 'MOVE cad files', command = self.move_dwg)
         self.mbutton_files.grid(row=0, column=2, padx=5,pady=5)
-        self.mbutton_cad = ttk.Button(box_buttons, text = 'save xls for cad', command = self.save_cad)
+        self.mbutton_cad = ttk.Button(box_buttons, text = 'SAVE data.xls Cad', command =lambda:  self.save('cad'))
         self.mbutton_cad.grid(row=0, column=3, padx=5, pady=5)
-        self.mbutton_create = ttk.Button(box_buttons, text = 'create folders', command=lambda: self.dossier_dir(functions.folder_scan))
-        self.mbutton_create.grid(row=0, column=4, padx=5, pady=5)
-        self.mbutton_create = ttk.Button(box_buttons, text = 'xlstomeetstaat', command = self.save_meetstaat)
-        self.mbutton_create.grid(row=0, column=5, padx=5, pady=5)
-
+        self.mbutton_createdir = ttk.Button(box_buttons, text = 'create missing folders', command =lambda: self.dossier_dir(functions.folder_scan))
+        self.mbutton_createdir.grid(row=0, column=4, padx=5, pady=5)
+        self.mbutton_createxls = ttk.Button(box_buttons, text = 'SAVE data.xls Staal', command =lambda:  self.save('meetstaat'))
+        self.mbutton_createxls.grid(row=0, column=5, padx=5, pady=5)
+        self.mbutton_createpdf = ttk.Button(box_buttons, text = 'SAVE pdf', command =lambda:  self.save('pdf'))
+        self.mbutton_createpdf.grid(row=0, column=6, padx=5, pady=5)
+        
         box_buttons.grid(row= 0,column= 0, columnspan= 3, sticky= tk.W, padx= 5,pady= 5)
         box_info.grid(row= 1, column = 0, columnspan= 3, sticky= tk.W, padx= 5, pady= 5)
 

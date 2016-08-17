@@ -145,14 +145,15 @@ class Functions(Settings):
                 return xlspath
             else:
                 print("no selection made")
-
+    """
     #working on move_backup
     def move_backup(self, back):
         str_back = {'staal':'//Backups/Staal',
                 'cad':'//Backups//Cad'}
         cwd = os.path.dirname(os.path.realpath(sys.argv[0])         # working directory
-        src_dir = src_back + str_back[back]
-        pass
+        #src_dir = back + str_back[back]
+        return cwd
+    """
 
 
     def move_xls(self):

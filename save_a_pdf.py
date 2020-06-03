@@ -609,4 +609,4 @@ class GetSave(FooterCanvas):
                             topMargin= 2*cm,
                             bottomMargin=100
                             )
-        doc.multiBuild(Story, canvasmaker = FooterCanvas)
+        doc.multiBuild(Story)
